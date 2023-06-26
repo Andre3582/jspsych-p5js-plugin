@@ -5,7 +5,7 @@ var jsPsychP5JS = (function (jspsych) {
   'use strict';
 
   const info = {
-      name: "p5-js",
+      name: "p5js",
       parameters: {
           /** The p5 js setup func */
           setup_func: {
@@ -84,7 +84,7 @@ var jsPsychP5JS = (function (jspsych) {
       },
   };
   /**
-   * **p5-js**
+   * **p5js**
    *
    * jsPsych plugin for displaying a canvas stimulus using p5.js 
    *
@@ -100,7 +100,7 @@ var jsPsychP5JS = (function (jspsych) {
 
 
           // create div to hold the canvas
-          var html = '<div id="jspsych-p5-js-stimulus"></div>'  ;
+          var html = '<div id="jspsych-p5js-stimulus"></div>'  ;
               
 
              
@@ -113,7 +113,7 @@ var jsPsychP5JS = (function (jspsych) {
                   buttons = trial.button_html;
               }
               else {
-                  console.error("Error in p5-js plugin. The length of the button_html array does not equal the length of the button_choices array");
+                  console.error("Error in p5js plugin. The length of the button_html array does not equal the length of the button_choices array");
               }
           }
           else {
@@ -123,15 +123,15 @@ var jsPsychP5JS = (function (jspsych) {
           }
 
           
-          html += '<div id="jspsych-p5-js-btngroup">';
+          html += '<div id="jspsych-p5js-btngroup">';
           for (var i = 0; i < trial.button_choices.length; i++) {
               var str = buttons[i].replace(/%choice%/g, trial.button_choices[i]);
               html +=
-                  '<div class="jspsych-p5-js-button" style="display: inline-block; margin:' +
+                  '<div class="jspsych-p5js-button" style="display: inline-block; margin:' +
                       trial.margin_vertical +
                       " " +
                       trial.margin_horizontal +
-                      '" id="jspsych-p5-js-button-' +
+                      '" id="jspsych-p5js-button-' +
                       i +
                       '" data-choice="' +
                       i +
@@ -163,7 +163,7 @@ var jsPsychP5JS = (function (jspsych) {
           }
           
           // place the p5 js canvas in the designated div
-          new p5(p5js_sketch, "jspsych-p5-js-stimulus")
+          new p5(p5js_sketch, "jspsych-p5js-stimulus")
 
           // start time
           var start_time = performance.now();
@@ -171,7 +171,7 @@ var jsPsychP5JS = (function (jspsych) {
           // add event listeners to buttons
           for (var i = 0; i < trial.button_choices.length; i++) {
               display_element
-                  .querySelector("#jspsych-p5-js-button-" + i)
+                  .querySelector("#jspsych-p5js-button-" + i)
                   .addEventListener("click", (e) => {
                   var btn_el = e.currentTarget;
                   var button_choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
@@ -223,10 +223,10 @@ var jsPsychP5JS = (function (jspsych) {
               response.rt = rt;
               // after a valid response, the stimulus will have the CSS class 'responded'
               // which can be used to provide visual feedback that a response was recorded
-              display_element.querySelector("#jspsych-p5-js-stimulus").className +=
+              display_element.querySelector("#jspsych-p5js-stimulus").className +=
                   " responded";
               // disable all the buttons after a response
-              var btns = document.querySelectorAll(".jspsych-p5-js-button button");
+              var btns = document.querySelectorAll(".jspsych-p5js-button button");
               for (var i = 0; i < btns.length; i++) {
                   //btns[i].removeEventListener('click');
                   btns[i].setAttribute("disabled", "disabled");
@@ -240,7 +240,7 @@ var jsPsychP5JS = (function (jspsych) {
           var after_key_response = (info) => {
             // after a valid response, the stimulus will have the CSS class 'responded'
             // which can be used to provide visual feedback that a response was recorded
-            display_element.querySelector("#jspsych-p5-js-stimulus").className +=
+            display_element.querySelector("#jspsych-p5js-stimulus").className +=
                   " responded";
             // only record the first response
             if (response.key == null) {
@@ -267,7 +267,7 @@ var jsPsychP5JS = (function (jspsych) {
           // hide image if timing is set
           if (trial.stimulus_duration !== null) {
               this.jsPsych.pluginAPI.setTimeout(() => {
-                  display_element.querySelector("#jspsych-p5-js-stimulus").style.visibility = "hidden";
+                  display_element.querySelector("#jspsych-p5js-stimulus").style.visibility = "hidden";
               }, trial.stimulus_duration);
           }
           // end trial if time limit is set
