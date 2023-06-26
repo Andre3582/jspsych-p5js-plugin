@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="../dist/jspsych.js"></script>
+    <link href="../dist/jspsych.css" rel="stylesheet" type="text/css" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+    <script src="../dist/plugin-p5-js.js"></script>
+    
+  </head>
+  <body></body>
+
+  <script>    
+
+  const jsPsych = initJsPsych({
+    on_finish: function() {
+      jsPsych.data.displayData();
+    }
+  });
+
+  // basic p5 canvas with a circle
+  const p5js_trial_1 = {
+        type: jsPsychP5JS,
+        setup_func: function(p) {
+          p.createCanvas(600,600)
+          p.background(128)         
+        },
+        draw_func: function(p){
+          p.circle(300,300,100)
+        },
+        button_choices: ['Next'],
+    };
+
+    // animated circle
+    const p5js_trial_2 = {
+        type: jsPsychP5JS,
+        setup_func: function(p) {
+          p.createCanvas(600,600)
+          p.background(128)         
+        },
+        draw_func: function(p){
+          let size = p.sin( p.millis() / 1000) * 150;
+          p.background(128) 
+          p.circle(300,300,size)
+        },
+        button_choices: ['Next'],
+    };
+
+
+
+    
+    // quick experiment: determine which way the circle is rotating
+    // note the way how some top level declarations (TLD) are added as you might want to do in a p5 js sketch
+
+    let rotation_dir = Math.round(Math.random()) * 2 - 1
+
+    const p5js_trial_3 = {
+        type: jsPsychP5JS,
+        top_level_declarations: function (p){
+          p.TLD = {} // create an empty object tagged on p so the var's and funcs are accessible within setup and draw
+          
+          // define variables
+          p.TLD.canv_width = 800
+          p.TLD.canv_height = 500
+
+          p.TLD.phase_offset = p.random(6000)
+          
+
+          // define a function
+          p.TLD.setLocation = function (s) {
+            return [p.sin(s), p.cos(s)]
+          }
+        },
+        setup_func: function(p) {
+          p.createCanvas(p.TLD.canv_width, p.TLD.canv_height)        
+        },
+        draw_func: function(p){
+          p.background(128)
+          
+          let [x, y] = p.TLD.setLocation(rotation_dir * p.millis()/1000 + p.TLD.phase_offset)
+          p.translate(p.width / 2, p.height / 2);
+          p.circle(x * 100, y * 100,  55)
+
+        },
+        stimulus_duration: 300,
+        prompt: "Press J for clockwise rotation and press J for counter clocwise rotation.",
+        key_choices: ['f','j'],
+        data:{
+          rotation: rotation_dir
+        }
+    };
+
+    // It is also possible to make use of built in p5 js functions to interact with the mouse and keyboard
+    // as is shown here.
+    const p5js_trial_4 = {
+        type: jsPsychP5JS,
+        top_level_declarations: function (p){
+          p.TLD = {} // create an empty object tagged on p so the var's and funcs are accessible within setup and draw
+          p.TLD.color_val = 0;
+
+          // set builtin p5js functions as below to interact with e.g. the mouse  (see "https://p5js.org/reference/#/p5/mousePressed")
+          p.mousePressed = function() {
+            if (p.TLD.color_val  === 0) {
+              p.TLD.color_val  = 255;
+            } else {
+              p.TLD.color_val  = 0;
+            }
+          }
+        },
+        
+        setup_func: function(p) {
+          p.createCanvas(400, 400)        
+        },
+        draw_func: function(p){
+          p.background(128)
+          p.translate(p.width / 2, p.height / 2);
+          p.circle(0, 0,  55)
+          p.fill(p.TLD.color_val)
+
+        },
+        prompt: "Press click with your mouse to change color.",
+        button_choices:["End"]
+    };
+    jsPsych.run([p5js_trial_1, p5js_trial_2, p5js_trial_3, p5js_trial_4]);
+    
+  </script>
+
+
+</html>
